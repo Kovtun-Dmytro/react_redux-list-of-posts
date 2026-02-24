@@ -15,8 +15,8 @@ export const UserSelector: React.FC<Props> = ({
   onChange,
 }) => {
   // `users` are loaded from the API, so for the performance reasons
-  // we load them once in the `UsersContext` when the `App` is opened
-  // and now we can easily reuse the `UserSelector` in any form
+  // users are loaded once into the Redux store
+  // and can be reused in any component via useAppSelector
   const {
     items: users,
     loading,
@@ -84,7 +84,11 @@ export const UserSelector: React.FC<Props> = ({
               <a
                 key={user.id}
                 href={`#user-${user.id}`}
-                onClick={() => onChange(user)}
+                onClick={e => {
+                  e.preventDefault();
+                  onChange(user);
+                  setExpanded(false);
+                }}
                 className={classNames('dropdown-item', {
                   'is-active': user.id === selectedUser?.id,
                 })}
