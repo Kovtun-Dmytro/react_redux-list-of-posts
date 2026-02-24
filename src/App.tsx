@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import classNames from 'classnames';
 
 import 'bulma/css/bulma.css';
@@ -10,18 +10,17 @@ import { PostDetails } from './components/PostDetails';
 import { UserSelector } from './components/UserSelector';
 import { Loader } from './components/Loader';
 
-import { User } from './types/User';
 import { Post } from './types/Post';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { fetchUsers } from './features/users/usersSlice';
 import { fetchPostsByUser } from './features/posts/postsSlice';
 import { selectPost } from './features/selectedPost/selectedPostSlice';
+import { setAuthor } from './features/author/authorSlice';
 
 export const App: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const [author, setAuthor] = useState<User | null>(null);
-
+  const author = useAppSelector(state => state.author.author);
   const {
     items: posts,
     loaded,
@@ -49,7 +48,10 @@ export const App: React.FC = () => {
           <div className="tile is-parent">
             <div className="tile is-child box is-success">
               <div className="block">
-                <UserSelector value={author} onChange={setAuthor} />
+                <UserSelector
+                  value={author}
+                  onChange={user => dispatch(setAuthor(user))}
+                />
               </div>
 
               <div className="block" data-cy="MainContent">
